@@ -167,10 +167,58 @@ bool oled_task_user(void) {
     return false;
 }
 
+static const uint16_t lower_key = MO(1);
+static const uint16_t raise_key = MO(2);
+static const uint16_t mhen_key = KC_INT5;
+static const uint16_t henk_key = KC_INT4;
+
+static bool lower_key_alone_pressed = false;
+static bool raise_key_alone_pressed = false;
+
+bool detect_alone_key_released(bool *key_alone_pressed, bool pressed) {
+  if (pressed) {
+    *key_alone_pressed = true;
+  }
+  else {
+    if (*key_alone_pressed) {
+      *key_alone_pressed = false;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void trigger_key(uint16_t keycode) {
+  register_code16(keycode);
+  unregister_code16(keycode);
+}
+
+void trigger_mhen_henk_keys(uint16_t keycode, bool pressed) {
+  if (keycode != lower_key) {
+    lower_key_alone_pressed = false;
+  }
+  if (keycode != raise_key) {
+    raise_key_alone_pressed = false;
+  }
+
+  if (keycode == lower_key) {
+    if (detect_alone_key_released(&lower_key_alone_pressed, pressed)) {
+      trigger_key(mhen_key);
+    }
+  }
+  else if (keycode == raise_key) {
+    if (detect_alone_key_released(&raise_key_alone_pressed, pressed)) {
+      trigger_key(henk_key);
+    }
+  }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     set_keylog(keycode, record);
   }
+  trigger_mhen_henk_keys(keycode, record->event.pressed);
   return true;
 }
 #endif // OLED_ENABLE
