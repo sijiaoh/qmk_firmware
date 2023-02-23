@@ -173,8 +173,8 @@ bool oled_task_user(void) {
 
 static const uint16_t lower_key = MO(1);
 static const uint16_t raise_key = MO(2);
-static const uint16_t mhen_key = KC_INT5;
-static const uint16_t henk_key = KC_INT4;
+static const uint16_t mhen_key = KC_MHEN;
+static const uint16_t henk_key = KC_HENK;
 
 static bool lower_key_alone_pressed = false;
 static bool raise_key_alone_pressed = false;
