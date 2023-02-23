@@ -173,8 +173,9 @@ bool oled_task_user(void) {
 
 static const uint16_t lower_key = MO(1);
 static const uint16_t raise_key = MO(2);
-static const uint16_t mhen_key = KC_INT5;
-static const uint16_t henk_key = KC_INT4;
+// KC_INT4 & KC_INT5 can not use with english mode on Windows.
+static const uint16_t mhen_key = KC_F13;
+static const uint16_t henk_key = KC_F14;
 
 static bool lower_key_alone_pressed = false;
 static bool raise_key_alone_pressed = false;
