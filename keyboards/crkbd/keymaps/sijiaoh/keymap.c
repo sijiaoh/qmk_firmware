@@ -32,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ENT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LALT,   MO(1),   MO(3),     KC_SPC,   MO(2), KC_RGUI
+                                          KC_LALT,   MO(1),   MO(4),     KC_SPC,   MO(2), KC_RGUI
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -45,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_F12,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LALT, _______,   MO(3),     KC_SPC,   MO(3), KC_RGUI
+                                          KC_LALT, _______,   MO(4),     KC_SPC,   MO(3), KC_RGUI
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -57,11 +57,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, KC_TILD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LALT,   MO(3),   MO(3),     KC_SPC, _______, KC_RGUI
+                                          KC_LALT,   MO(3),   MO(4),     KC_SPC, _______, KC_RGUI
                                       //`--------------------------'  `--------------------------'
   ),
 
   [3] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_TAB, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_BTN1, KC_BTN2, KC_BTN3, XXXXXXX,  KC_ESC,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LCTL, XXXXXXX, KC_BTN3, KC_BTN2, KC_BTN1, XXXXXXX,                      KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LALT, _______, _______,     KC_SPC, _______, KC_RGUI
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+  [4] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB, XXXXXXX, XXXXXXX,  KC_END, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX,  KC_TAB, XXXXXXX,   KC_UP,  KC_ESC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -86,6 +98,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 #define L_LOWER 2
 #define L_RAISE 4
 #define L_ADJUST 8
+#define L_MODIFY 16
 
 void oled_render_layer_state(void) {
     oled_write_P(PSTR("Layer: "), false);
@@ -104,6 +117,9 @@ void oled_render_layer_state(void) {
         case L_ADJUST|L_RAISE:
         case L_ADJUST|L_LOWER|L_RAISE:
             oled_write_ln_P(PSTR("Adjust"), false);
+            break;
+        default:
+            oled_write_ln_P(PSTR("Modify"), false);
             break;
     }
 }
