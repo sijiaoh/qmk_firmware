@@ -190,8 +190,9 @@ bool oled_task_user(void) {
 static const uint16_t lower_key = MO(1);
 static const uint16_t raise_key = MO(2);
 // KC_INT4 & KC_INT5 can not use with english mode on Windows.
-static const uint16_t mhen_key = KC_F13;
-static const uint16_t henk_key = KC_F14;
+// ATOK does not support F13 & F14 we use Ctrl+F1,F2 to toggle IME.
+static const uint16_t mhen_key = KC_F1;
+static const uint16_t henk_key = KC_F2;
 
 static bool lower_key_alone_pressed = false;
 static bool raise_key_alone_pressed = false;
@@ -225,12 +226,16 @@ void trigger_mhen_henk_keys(uint16_t keycode, bool pressed) {
 
   if (keycode == lower_key) {
     if (detect_alone_key_released(&lower_key_alone_pressed, pressed)) {
+      register_code16(KC_LCTL);
       trigger_key(mhen_key);
+      unregister_code16(KC_LCTL);
     }
   }
   else if (keycode == raise_key) {
     if (detect_alone_key_released(&raise_key_alone_pressed, pressed)) {
+      register_code16(KC_LCTL);
       trigger_key(henk_key);
+      unregister_code16(KC_LCTL);
     }
   }
 }
