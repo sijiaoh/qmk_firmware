@@ -498,6 +498,66 @@ void housekeeping_task_kb(void) {
 }
 #endif
 
+// Add IME switch function to layer keys.
+static const uint16_t lower_key = MO(2);
+static const uint16_t raise_key = MO(3);
+static const uint16_t mhen_key = KC_LNG2;
+static const uint16_t henk_key = KC_LNG1;
+
+static bool lower_key_alone_pressed = false;
+static bool raise_key_alone_pressed = false;
+
+bool detect_alone_key_released(bool *key_alone_pressed, bool pressed) {
+  if (pressed) {
+    *key_alone_pressed = true;
+  }
+  else {
+    if (*key_alone_pressed) {
+      *key_alone_pressed = false;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void trigger_key(uint16_t keycode) {
+  register_code16(keycode);
+  unregister_code16(keycode);
+}
+
+void trigger_mhen_henk_keys(uint16_t keycode, bool pressed) {
+  if (keycode != lower_key) {
+    lower_key_alone_pressed = false;
+  }
+  if (keycode != raise_key) {
+    raise_key_alone_pressed = false;
+  }
+
+  if (keycode == lower_key) {
+    if (detect_alone_key_released(&lower_key_alone_pressed, pressed)) {
+      trigger_key(mhen_key);
+    }
+  }
+  else if (keycode == raise_key) {
+    if (detect_alone_key_released(&raise_key_alone_pressed, pressed)) {
+      trigger_key(henk_key);
+    }
+  }
+}
+
+void trigger_emacs_ctrl_k(uint16_t keycode, bool is_pressed) {
+  if (keycode != EMACS_CTRL_K || !is_pressed) return;
+
+  register_code16(KC_LSFT);
+  trigger_key(KC_END);
+  unregister_code16(KC_LSFT);
+
+  register_code16(KC_LCTL);
+  trigger_key(KC_X);
+  unregister_code16(KC_LCTL);
+}
+
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     // store last keycode, row, and col for OLED
     keyball.last_kc  = keycode;
@@ -528,6 +588,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
             keyball_set_scroll_mode(record->event.pressed);
             return false;
     }
+
+    trigger_mhen_henk_keys(keycode, record->event.pressed);
+    trigger_emacs_ctrl_k(keycode, record->event.pressed);
 
     // process events which works on pressed only.
     if (record->event.pressed) {
