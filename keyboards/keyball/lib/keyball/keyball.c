@@ -499,8 +499,8 @@ void housekeeping_task_kb(void) {
 #endif
 
 // Add IME switch function to layer keys.
-static const uint16_t lower_key = MO(2);
-static const uint16_t raise_key = MO(3);
+static const uint16_t lower_key = MO(3);
+static const uint16_t raise_key = MO(2);
 static const uint16_t mhen_key = KC_LNG2;
 static const uint16_t henk_key = KC_LNG1;
 
